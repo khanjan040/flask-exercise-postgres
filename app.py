@@ -6,7 +6,7 @@ from sqlalchemy import null
 import functions as dbb
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:Khanjan0611$@host.docker.internal:5433/users_api"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:Khanjan0611$@postgresdb:5432/users_db"
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
@@ -153,4 +153,4 @@ def delete(id):
     ~~~~~~~~~~~~ END API ~~~~~~~~~~~~
     """
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")

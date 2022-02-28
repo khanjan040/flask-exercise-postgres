@@ -2,9 +2,26 @@ version: '3.4'
 
 services:
   flaskexercisepostgres:
-    image: flaskexercisepostgres
     build:
       context: .
       dockerfile: ./Dockerfile
+    command: >
+      bash -c "flask db init && flask db migrate && flask db upgrade && python app.py"
     ports:
       - 5000:5000
+    depends_on:
+      postgresdb:
+        condition: service_healthy
+
+  postgresdb:
+    image: 'postgres:14.2'
+    healthcheck:
+      test: "pg_isready --username=postgres && psql --username=postgres --list"
+      timeout: 10s
+      retries: 20
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: users_db
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
